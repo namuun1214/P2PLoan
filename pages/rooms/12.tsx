@@ -125,7 +125,7 @@ const RoomPage = () => {
       </VStack>
       <Button
         variant="solid"
-        w="90%"
+        w="50%"
         position="fixed"
         bottom={10}
         onClick={onOpen}

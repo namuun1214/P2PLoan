@@ -1,14 +1,14 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import { ChakraProvider } from '@chakra-ui/react'
-import { theme } from '../styles/theme'
-import Head from 'next/head'
-import { Box } from '@chakra-ui/react'
+import "../styles/globals.css";
+import type { AppProps } from "next/app";
+import { ChakraProvider } from "@chakra-ui/react";
+import { theme } from "../styles/theme";
+import Head from "next/head";
+import { Box } from "@chakra-ui/react";
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Box>
       <Head>
-        <title>RPayG</title>
+        <title>U2U</title>
         <meta name="description" content="This is RPG" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       </ChakraProvider>
     </Box>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;
