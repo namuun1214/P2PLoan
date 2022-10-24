@@ -2,6 +2,7 @@ import { Button, VStack, Text, Box } from "@chakra-ui/react";
 import router from "next/router";
 import React from "react";
 import { AiFillCheckCircle } from "react-icons/ai";
+import { FiArrowRight } from "react-icons/fi";
 
 function registerSucces() {
   return (
@@ -18,13 +19,14 @@ function registerSucces() {
         <Text>Таны бүртгэл амжилттай үүслээ</Text>
         <Button
           mt={4}
+          rightIcon={<FiArrowRight fontSize={20} />}
           colorScheme="teal"
           backgroundColor="#091B3D"
-          borderRadius="xl"
-          onClick={() => router.push("/homePage")}
+          variant="solid"
+          onClick={() => router.push("/createGroupPage")}
           type="button"
         >
-          Нүүр хуудас
+          Дараах
         </Button>
       </VStack>
     </Box>

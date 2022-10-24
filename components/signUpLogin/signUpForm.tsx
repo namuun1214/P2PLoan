@@ -11,6 +11,8 @@ import {
   PinInputField,
   Box,
 } from "@chakra-ui/react";
+import { FiArrowRight } from "react-icons/fi";
+import { GiArchiveRegister } from "react-icons/gi";
 import router from "next/router";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { useEffect, useRef, useState } from "react";
@@ -29,7 +31,6 @@ function SignUpForm() {
   const [expandForm, setExpandForm] = useState(false);
   const [counter, setCounter] = useState(60);
   const [OTP, setOtp] = useState();
-  const intervalRef = useRef(null);
 
   const generateRecaptcha = () => {
     window.recaptchaVerifier = new RecaptchaVerifier(
@@ -43,10 +44,9 @@ function SignUpForm() {
       authentication
     );
   };
-  const trackPhone = (e: any) => {
-    console.log(e);
-  };
+
   const requestOTP = (e: any) => {
+    // ymar negen condition shalgaagv shuud
     setExpandForm(true);
     console.log(e);
     generateRecaptcha();
@@ -114,6 +114,7 @@ function SignUpForm() {
           {expandForm === false ? (
             <>
               <Button
+                rightIcon={<FiArrowRight fontSize={20} />}
                 mt={4}
                 colorScheme="teal"
                 borderRadius="md"
@@ -160,9 +161,9 @@ function SignUpForm() {
         <>
           <Button
             mt={4}
+            rightIcon={<GiArchiveRegister fontSize={20} />}
             colorScheme="teal"
             backgroundColor="#091B3D"
-            borderRadius="md"
             onClick={() => router.push("/registerSucces")}
             type="button"
           >
