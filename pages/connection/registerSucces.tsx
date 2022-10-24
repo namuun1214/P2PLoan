@@ -23,7 +23,7 @@ function registerSucces() {
           colorScheme="teal"
           backgroundColor="#091B3D"
           variant="solid"
-          onClick={() => router.push("/createGroupPage")}
+          onClick={() => router.push("../connection/walletConnect")}
           type="button"
         >
           Дараах
