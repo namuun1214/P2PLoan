@@ -4,9 +4,11 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "../styles/theme";
 import Head from "next/head";
 import { Box } from "@chakra-ui/react";
-
-import { ThirdwebWeb3Provider } from "@3rdweb/hooks";
+import router, { useRouter } from "next/router";
+import { ClerkProvider } from "@clerk/nextjs";
 function MyApp({ Component, pageProps }: AppProps) {
+  const clerkFrontendApi = process.env.NEXT_PUBLIC_CLERK_FRONTEND_API;
+
   return (
     <Box>
       <Head>
@@ -21,9 +23,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
       </Head>
 
-      <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
-      </ChakraProvider>
+      <ClerkProvider
+        frontendApi={clerkFrontendApi}
+        navigate={(to) => router.push(to)}
+      >
+        <ChakraProvider theme={theme}>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </ClerkProvider>
     </Box>
   );
 }
