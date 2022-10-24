@@ -1,8 +1,7 @@
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form'
 import {
   FormLabel,
   FormControl,
-  Input,
   Button,
   VStack,
   Text,
@@ -10,60 +9,91 @@ import {
   PinInput,
   PinInputField,
   Box,
-} from "@chakra-ui/react";
-import router from "next/router";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { useEffect, useRef, useState } from "react";
-import { authentication } from "../../src/config/firebase";
-import React from "react";
-
+  Input,
+} from '@chakra-ui/react'
+import router from 'next/router'
+import {
+  ConfirmationResult,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  User,
+  ApplicationVerifier,
+} from 'firebase/auth'
+import { useEffect, useState } from 'react'
+import { authentication } from '../../src/config/firebase'
+import React from 'react'
+import { useAuth } from '../../src/context/AuthContext'
+declare global {
+  interface Window {
+    recaptchaVerifier: ApplicationVerifier
+    confirmationResult: ConfirmationResult
+  }
+}
 function SignUpForm() {
   const {
-    handleSubmit,
-    register,
     formState: { isSubmitting },
-  } = useForm();
-
-  const countryCode = "+97686481515";
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [expandForm, setExpandForm] = useState(false);
-  const [counter, setCounter] = useState(60);
-  const [OTP, setOtp] = useState();
-  const intervalRef = useRef(null);
-
-  const generateRecaptcha = () => {
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      "recaptcha",
-      {
-        size: "visible",
-        callback: (response: any) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-        },
-      },
-      authentication
-    );
-  };
-  const trackPhone = (e: any) => {
-    console.log(e);
-  };
-  const requestOTP = (e: any) => {
-    setExpandForm(true);
-    console.log(e);
-    generateRecaptcha();
-    let appVerifeir = window.recaptchaVerifier;
-    signInWithPhoneNumber(authentication, e, appVerifeir)
-      .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
+  } = useForm()
+  const { setUser } = useAuth()
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [expandForm, setExpandForm] = useState(false)
+  const [counter, setCounter] = useState(60)
   useEffect(() => {
-    const timer = setInterval(() => setCounter(counter - 1), 1000);
-    return () => clearInterval(timer);
-  }, [counter]);
+    if (authentication || typeof window !== undefined) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        'recaptcha',
+        {
+          size: 'visible',
+          callback: () => {
+            setExpandForm(true)
+          },
+        },
+        authentication,
+      )
+    }
+  }, [])
+
+  const login = async (phoneNumber: string): Promise<ConfirmationResult> => {
+    return new Promise((response, reject) => {
+      signInWithPhoneNumber(
+        authentication,
+        `+976${phoneNumber}`,
+        window.recaptchaVerifier,
+      )
+        .then((confirmationResult) => {
+          window.confirmationResult = confirmationResult
+          response(confirmationResult)
+        })
+        .catch((error: Error) => {
+          reject(error)
+        })
+    })
+  }
+  const resendCode = async (
+    phoneNumber: string,
+  ): Promise<ConfirmationResult> => {
+    return login(phoneNumber)
+  }
+  const confirmCode = (confirmationCode: string): Promise<User> => {
+    return new Promise((response, reject) => {
+      window.confirmationResult
+        .confirm(confirmationCode)
+
+        .then((result: any) => {
+          console.log(result.user)
+          setUser(result.user as User)
+
+          response(result.user)
+        })
+
+        .catch((error: Error) => {
+          reject(error)
+        })
+    })
+  }
+  useEffect(() => {
+    const timer = setInterval(() => setCounter(counter - 1), 1000)
+    return () => clearInterval(timer)
+  }, [counter])
 
   return (
     <Box
@@ -73,67 +103,52 @@ function SignUpForm() {
       alignItems="center"
       height="100vh"
     >
-      <form onSubmit={handleSubmit(requestOTP)}>
+      <form>
         <VStack width="400px" p="6" spacing={8}>
-          <Text>Бүртгүүлэх</Text>
-          <FormControl isRequired>
-            <FormLabel htmlFor="дугаар">Утасны дугаар</FormLabel>
-            <Input
-              // value={phoneNumber}
-              id="phoneNumber"
-              type="tel"
-              {...register("phoneNumber", {
-                required: "This is required",
-                minLength: { value: 8, message: "Minimum length should be 8" },
-              })}
-            />
-          </FormControl>
-          {/* <FormControl>
-            <FormLabel htmlFor="name">Цахим хаяг</FormLabel>
-            <Input
-              id="name"
-              type="email"
-              {...register("email", {
-                required: "This is required",
-                minLength: { value: 4, message: "Minimum length should be 4" },
-              })}
-            />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel htmlFor="name">Нууц үг</FormLabel>
-            <Input
-              id="name"
-              type="password"
-              {...register("password", {
-                required: "This is required",
-                minLength: { value: 4, message: "Minimum length should be 4" },
-              })}
-            />
-          </FormControl> */}
+          <Text variant="bodyBold">Бүртгүүлэх</Text>
 
-          {expandForm === false ? (
+          {!expandForm ? (
             <>
+              <FormControl isRequired>
+                <FormLabel htmlFor="дугаар">Утасны дугаар</FormLabel>
+                <Input
+                  value={phoneNumber}
+                  id="phoneNumber"
+                  type="tel"
+                  onChange={(value) => {
+                    setPhoneNumber(value.target.value)
+                  }}
+                />
+              </FormControl>
+              <Box id="recaptcha"></Box>
               <Button
                 mt={4}
-                colorScheme="teal"
-                borderRadius="md"
-                isLoading={isSubmitting}
-                type="submit"
+                variant="solid"
+                onClick={() => login(phoneNumber)}
                 backgroundColor="#091B3D"
               >
-                Дараах{" "}
+                Дараах{' '}
               </Button>
             </>
-          ) : null}
-
-          {expandForm === true ? (
-            <>
+          ) : (
+            <VStack spacing={2}>
               <Text padding="3">
-                Таны {countryCode} дугаарт ирсэн 6 оронтой тоог оруулна уу.
+                Таны {phoneNumber} дугаарт ирсэн 6 оронтой тоог оруулна уу.
               </Text>
-              <Text padding="3">00:{counter}</Text>
-              <HStack>
-                <PinInput type="alphanumeric">
+
+              <HStack spacing={5}>
+                <PinInput
+                  type="alphanumeric"
+                  onComplete={(value) =>
+                    confirmCode(value)
+                      .then(() => {
+                        router.push('/registerSucces')
+                      })
+                      .catch((error) => {
+                        alert('Code is wrong')
+                      })
+                  }
+                >
                   <PinInputField />
                   <PinInputField />
                   <PinInputField />
@@ -142,35 +157,21 @@ function SignUpForm() {
                   <PinInputField />
                 </PinInput>
               </HStack>
-              <Button
-                variant="link"
-                colorScheme="teal"
-                borderRadius="md"
-                type="button"
-                onClick={() => setCounter(60)}
-              >
-                Дахин илгээх
-              </Button>
-            </>
-          ) : null}
+              <HStack>
+                <Button
+                  variant="link"
+                  type="button"
+                  onClick={() => resendCode(phoneNumber)}
+                  disabled={counter > 0}
+                >
+                  Дахин илгээх {counter} сек
+                </Button>
+              </HStack>
+            </VStack>
+          )}
         </VStack>
       </form>
-      <Box id="recaptcha"></Box>
-      {expandForm === true ? (
-        <>
-          <Button
-            mt={4}
-            colorScheme="teal"
-            backgroundColor="#091B3D"
-            borderRadius="md"
-            onClick={() => router.push("/registerSucces")}
-            type="button"
-          >
-            Бүртгүүлэх
-          </Button>
-        </>
-      ) : null}
     </Box>
-  );
+  )
 }
-export default SignUpForm;
+export default SignUpForm
