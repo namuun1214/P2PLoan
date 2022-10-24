@@ -1,6 +1,24 @@
-import { extendTheme } from '@chakra-ui/react'
+import { background, extendTheme } from '@chakra-ui/react'
 import { theme as base } from '@chakra-ui/react';
+import { inputAnatomy } from '@chakra-ui/anatomy'
+import { createMultiStyleConfigHelpers } from '@chakra-ui/react'
 
+const { definePartsStyle, defineMultiStyleConfig } =
+    createMultiStyleConfigHelpers(inputAnatomy.keys)
+
+const baseStyle = definePartsStyle({
+    // define the part you're going to style
+    field: {
+        fontFamily: 'Montserrat', // change the font family
+        color: 'dark.500 !important', // change the input text color
+        outline: 'gray',
+        backgroundColor: 'white',
+        height: '50px'
+    },
+
+})
+
+export const inputTheme = defineMultiStyleConfig({ baseStyle })
 export const theme = extendTheme({
     ...base,
     styles: {
@@ -19,6 +37,9 @@ export const theme = extendTheme({
         caption: "Montserrat",
     },
     components: {
+        Input: inputTheme,
+        PinInput: inputTheme,
+        PinInputField: inputTheme,
         Button: {
             baseStyle: {
                 color: 'white',
@@ -60,12 +81,13 @@ export const theme = extendTheme({
                     fontWeight: '700',
                 }
             }
-        }
+        },
+
     },
-    config: {
-        disableTransitionOnChange: true,
-        initialColorMode: 'light',
-        useSystemColorMode: false,
-    },
+    // config: {
+    //     disableTransitionOnChange: true,
+    //     initialColorMode: 'light',
+    //     useSystemColorMode: false,
+    // },
 })
 
