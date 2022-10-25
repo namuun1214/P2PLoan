@@ -1,4 +1,4 @@
-import { background, extendTheme } from '@chakra-ui/react'
+import { extendTheme } from '@chakra-ui/react'
 import { theme as base } from '@chakra-ui/react';
 import { inputAnatomy } from '@chakra-ui/anatomy'
 import { createMultiStyleConfigHelpers } from '@chakra-ui/react'

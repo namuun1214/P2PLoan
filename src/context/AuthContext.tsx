@@ -7,7 +7,7 @@ import React, {
   ReactElement,
 } from 'react'
 import { onAuthStateChanged, RecaptchaVerifier, User } from 'firebase/auth'
-import { auth } from '../common/firebase/firebase'
+import { auth } from '../config/common/firebase/firebase'
 
 type AuthContextType = {
   user?: User | null

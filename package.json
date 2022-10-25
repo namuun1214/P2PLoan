@@ -11,6 +11,7 @@
   "dependencies": {
     "@3rdweb/hooks": "^1.9.2",
     "@chakra-ui/react": "^2.3.6",
+    "@clerk/nextjs": "^4.5.4",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@metamask/detect-provider": "^2.0.0",

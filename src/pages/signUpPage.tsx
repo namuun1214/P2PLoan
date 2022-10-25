@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { useUser } from '../common/firebase/firebase'
+import { useUser } from '../config/common/firebase/firebase'
 import { Header } from '../components/layout/header'
 import SignUpForm from '../components/signUpLogin/signUpForm'
 import { useAuth } from '../context/AuthContext'

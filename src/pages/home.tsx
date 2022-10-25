@@ -3,7 +3,7 @@ import Head from 'next/head'
 
 import { Box, Button } from '@chakra-ui/react'
 import SignUpPage from './signUpPage'
-import { useUser } from '../common/firebase/firebase'
+import { useUser } from '../config/common/firebase/firebase'
 import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router'
 const HomePage: NextPage = () => {

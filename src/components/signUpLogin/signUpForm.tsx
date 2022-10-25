@@ -31,7 +31,7 @@ import {
   useDocumentWithUser,
   useDocumentWithUserOnce,
   useUser,
-} from '../../common/firebase/firebase'
+} from '../../config/common/firebase/firebase'
 declare global {
   interface Window {
     recaptchaVerifier: ApplicationVerifier

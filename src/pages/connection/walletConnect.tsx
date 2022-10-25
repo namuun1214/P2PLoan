@@ -1,14 +1,14 @@
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { MetaMaskInpageProvider } from '@metamask/providers'
-import { Box, Button, Text, VStack } from '@chakra-ui/react'
-import router from 'next/router'
-
+import { Box, Button, Icon, Progress, Text, VStack } from '@chakra-ui/react'
+import { TbShieldLock } from 'react-icons/tb'
+import CreateGroupPage from './networkPage'
 export default function WalletConnect() {
   const [isConnected, setIsConnected] = useState(false)
   const [hasMetamask, setHasMetamask] = useState(false)
   const [signer, setSigner] = useState(undefined)
-  const [account, setAccount] = useState()
+
   useEffect(() => {
     if (typeof window.ethereum !== 'undefined') {
       setHasMetamask(true)
@@ -19,10 +19,7 @@ export default function WalletConnect() {
     if (typeof window.ethereum !== 'undefined') {
       try {
         const ethereum = (window.ethereum as unknown) as MetaMaskInpageProvider
-        const accounts = await ethereum.request({
-          method: 'eth_requestAccounts',
-        })
-        setAccount(accounts[0])
+        await ethereum.request({ method: 'eth_requestAccounts' })
         setIsConnected(true)
 
         const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -138,6 +135,7 @@ export default function WalletConnect() {
       console.log('Please install MetaMask')
     }
   }
+  console.log(signer)
   return (
     <Box
       height="80vh"
@@ -145,21 +143,31 @@ export default function WalletConnect() {
       alignItems="center"
       justifyContent="center"
     >
-      <VStack borderWidth="2px" borderRadius="lg" padding="20">
+      <Progress value={20} size="xs" colorScheme="green" />
+
+      <VStack padding="20">
         {hasMetamask ? (
           isConnected ? (
-            <>
-              <Text>Хэтэвч холбогдсон</Text>
-              <Text>{account}</Text>
-            </>
+            <Text>Хэтэвч холбогдсон</Text>
           ) : (
-            <Button onClick={() => connect()}>Хэтэвчээ холбох</Button>
+            <>
+              <Icon
+                as={TbShieldLock}
+                w={10}
+                h={10}
+                color="green.500"
+                marginBottom={6}
+              />
+              <Button colorScheme="teal" onClick={() => connect()}>
+                Хэтэвчээ холбох
+              </Button>
+            </>
           )
         ) : (
           'Please install metamask'
         )}
 
-        {isConnected ? <Button onClick={() => execute()}>Execute</Button> : ''}
+        {isConnected ? <CreateGroupPage /> : ''}
       </VStack>
     </Box>
   )
