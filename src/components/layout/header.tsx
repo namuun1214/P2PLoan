@@ -1,6 +1,12 @@
 import React from 'react'
-import { Box, Text } from '@chakra-ui/react'
-export const Header = ({ title = 'P2PLoan', isBack = false }) => {
+import { Box, CloseButton, Text } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+export const Header = ({
+  title = 'P2PLoan',
+  isBack = false,
+  hasCloseButton = false,
+}) => {
+  const router = useRouter()
   return (
     <Box
       display="flex"
@@ -9,8 +15,8 @@ export const Header = ({ title = 'P2PLoan', isBack = false }) => {
       justifyContent="space-between"
       alignItems="center"
     >
-      {isBack && (
-        <Box justifySelf="flex-start">
+      {isBack ? (
+        <Box justifySelf="flex-start" onClick={() => router.back()}>
           <svg
             width="24"
             height="24"
@@ -34,9 +40,15 @@ export const Header = ({ title = 'P2PLoan', isBack = false }) => {
             </defs>
           </svg>
         </Box>
+      ) : (
+        <Text></Text>
       )}
       <Text variant="bodyBold">{title}</Text>
-      <Text variant="bodyBold"></Text>
+      {hasCloseButton ? (
+        <CloseButton onClick={() => router.push('/home')} />
+      ) : (
+        <Text></Text>
+      )}
     </Box>
   )
 }

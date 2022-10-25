@@ -135,12 +135,7 @@ function SignUpForm() {
                 />
               </FormControl>
               <Box id="recaptcha"></Box>
-              <Button
-                mt={4}
-                variant="solid"
-                onClick={() => login(phoneNumber)}
-                backgroundColor="#091B3D"
-              >
+              <Button mt={4} variant="solid" onClick={() => login(phoneNumber)}>
                 Дараах{' '}
               </Button>
             </>

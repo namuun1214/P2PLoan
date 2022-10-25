@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 
 import { Box, Button } from '@chakra-ui/react'
-import SignUpPage from './signUpPage'
+import SignUpPage from './login'
 import { useUser } from '../config/common/firebase/firebase'
 import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router'
@@ -21,6 +21,14 @@ const HomePage: NextPage = () => {
 
       <main>
         <div>Home</div>
+        <Button
+          variant="link"
+          onClick={() => {
+            router.push('/group/myGroups')
+          }}
+        >
+          Миний группууд
+        </Button>
         <Button
           onClick={() => {
             void logout()

@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 
 import { Box } from '@chakra-ui/react'
-import SignUpPage from './signUpPage'
+import SignUpPage from './login'
 const SignIn: NextPage = () => {
   return (
     <Box>

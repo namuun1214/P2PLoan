@@ -89,6 +89,12 @@ export const theme = extendTheme({
                     fontSize: 14,
                     lineHeight: '16.41px',
                     fontWeight: '700',
+                },
+                secondary: {
+                    fontSize: 12,
+                    lineHeight: '14.41px',
+                    fontWeight: '500',
+                    color: 'gray'
                 }
             }
         },
