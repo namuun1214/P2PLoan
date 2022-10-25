@@ -1,11 +1,12 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
-import { ChakraProvider } from "@chakra-ui/react";
-import { theme } from "../styles/theme";
-import Head from "next/head";
-import { Box } from "@chakra-ui/react";
+import '../../styles/globals.css'
+import type { AppProps } from 'next/app'
+import { ChakraProvider } from '@chakra-ui/react'
+import { theme } from '../../styles/theme'
+import Head from 'next/head'
+import { Box } from '@chakra-ui/react'
 
-import { ThirdwebWeb3Provider } from "@3rdweb/hooks";
+import { ThirdwebWeb3Provider } from '@3rdweb/hooks'
+import { AuthProvider } from '../context/AuthContext'
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Box>
@@ -20,12 +21,13 @@ function MyApp({ Component, pageProps }: AppProps) {
           rel="stylesheet"
         />
       </Head>
-
-      <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
-      </ChakraProvider>
+      <AuthProvider>
+        <ChakraProvider theme={theme}>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </AuthProvider>
     </Box>
-  );
+  )
 }
 
-export default MyApp;
+export default MyApp

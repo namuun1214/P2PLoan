@@ -1,9 +1,9 @@
-import type { NextPage } from "next";
-import Head from "next/head";
+import type { NextPage } from 'next'
+import Head from 'next/head'
 
-import { Box } from "@chakra-ui/react";
-import SignUpPage from "./signUpPage";
-const Home: NextPage = () => {
+import { Box } from '@chakra-ui/react'
+import SignUpPage from './signUpPage'
+const SignIn: NextPage = () => {
   return (
     <Box>
       <Head>
@@ -16,7 +16,7 @@ const Home: NextPage = () => {
         <SignUpPage />
       </main>
     </Box>
-  );
-};
+  )
+}
 
-export default Home;
+export default SignIn

@@ -7,7 +7,7 @@ import React, {
   ReactElement,
 } from 'react'
 import { onAuthStateChanged, RecaptchaVerifier, User } from 'firebase/auth'
-import { authentication } from '../config/firebase'
+import { auth } from '../common/firebase/firebase'
 
 type AuthContextType = {
   user?: User | null
@@ -34,12 +34,12 @@ export const AuthProvider: FC<{ children: ReactElement }> = (props) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     setUser({})
-    return authentication.signOut()
+    return auth.signOut()
   }
 
   useEffect(() => {
     setLoading(true)
-    const unsubscribe = onAuthStateChanged(authentication, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user)
       } else {
@@ -49,7 +49,7 @@ export const AuthProvider: FC<{ children: ReactElement }> = (props) => {
       setLoading(false)
     })
     return () => unsubscribe()
-  }, [authentication])
+  }, [auth])
   useEffect(() => {
     console.log('hjhjh', user)
     if (user === undefined) {

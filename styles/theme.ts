@@ -11,10 +11,20 @@ const baseStyle = definePartsStyle({
     field: {
         fontFamily: 'Montserrat', // change the font family
         color: 'dark.500 !important', // change the input text color
-        outline: 'gray',
-        backgroundColor: 'white',
         height: '50px'
     },
+
+
+})
+const pinInputStyle = definePartsStyle({
+    // define the part you're going to style
+    field: {
+        fontFamily: 'Montserrat', // change the font family
+        color: 'dark.500 !important', // change the input text color
+        height: '40px',
+        backgroundColor: 'red.200 !important'
+    },
+
 
 })
 
@@ -23,10 +33,7 @@ export const theme = extendTheme({
     ...base,
     styles: {
         global: () => ({
-            body: {
-                bg: 'white',
-                color: 'black',
-            }
+
         })
     },
     fonts: {
@@ -38,8 +45,8 @@ export const theme = extendTheme({
     },
     components: {
         Input: inputTheme,
-        PinInput: inputTheme,
-        PinInputField: inputTheme,
+        // PinInput: pinInputStyle,
+        PinInputField: pinInputStyle,
         Button: {
             baseStyle: {
                 color: 'white',
@@ -47,8 +54,11 @@ export const theme = extendTheme({
             },
             variants: {
                 solid: {
-                    rounded: 'sm',
+                    rounded: 'lg',
                     backgroundColor: '#293056',
+                    color: 'white',
+                    px: 8,
+                    py: 3
                 }
             }
         },
@@ -84,10 +94,10 @@ export const theme = extendTheme({
         },
 
     },
-    // config: {
-    //     disableTransitionOnChange: true,
-    //     initialColorMode: 'light',
-    //     useSystemColorMode: false,
-    // },
+    config: {
+        disableTransitionOnChange: true,
+        initialColorMode: 'light',
+        useSystemColorMode: false,
+    },
 })
 

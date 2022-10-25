@@ -1,8 +1,8 @@
-import { Button, VStack, Text, Box } from "@chakra-ui/react";
-import router from "next/router";
-import React from "react";
-import { AiFillCheckCircle } from "react-icons/ai";
-import { FiArrowRight } from "react-icons/fi";
+import { Button, VStack, Text, Box } from '@chakra-ui/react'
+import router from 'next/router'
+import React from 'react'
+import { AiFillCheckCircle } from 'react-icons/ai'
+import { FiArrowRight } from 'react-icons/fi'
 
 function registerSucces() {
   return (
@@ -23,14 +23,14 @@ function registerSucces() {
           colorScheme="teal"
           backgroundColor="#091B3D"
           variant="solid"
-          onClick={() => router.push("../connection/walletConnect")}
+          onClick={() => router.push('/home')}
           type="button"
         >
           Дараах
         </Button>
       </VStack>
     </Box>
-  );
+  )
 }
 
-export default registerSucces;
+export default registerSucces
