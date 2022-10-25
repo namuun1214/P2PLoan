@@ -145,7 +145,7 @@ export default function WalletConnect() {
     >
       <Progress value={20} size="xs" colorScheme="green" />
 
-      <VStack borderWidth="2px" borderRadius="lg" padding="20">
+      <VStack padding="20">
         {hasMetamask ? (
           isConnected ? (
             <Text>Хэтэвч холбогдсон</Text>
