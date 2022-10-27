@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Text, VStack } from "@chakra-ui/react";
 import SignUpPage from "./login";
 import { useUser } from "../config/common/firebase/firebase";
 import { useAuth } from "../context/AuthContext";

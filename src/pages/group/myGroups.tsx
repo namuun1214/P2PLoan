@@ -37,7 +37,7 @@ const MyGroups: NextPage = () => {
     {
       name: "Гэр бүл",
       createdDate: "2022.09.10",
-      balance: "500000",
+      balance: "0",
       interestRate: "4",
       members: [
         { name: "hh", img: "https://i.pravatar.cc/100?img=3" },

@@ -1,13 +1,18 @@
-import { Button, VStack, Text, Box, Link } from "@chakra-ui/react";
-import router from "next/router";
-import React from "react";
+import { Button, VStack, Text, Box, Link, Container } from "@chakra-ui/react";
+import router, { useRouter } from "next/router";
+import React, { useState } from "react";
+import CopyToClipboard from "react-copy-to-clipboard";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { FiArrowRight } from "react-icons/fi";
 import { FiExternalLink } from "react-icons/fi";
+import { CorrectIcon, CopyIcon } from "../components/icons";
 
 function registerSucces() {
+  const router = useRouter();
+  const hash = router.query.hash;
+  const [isCopied, setCopied] = useState(false);
   return (
-    <Box
+    <Container
       display="flex"
       flexDirection="column"
       justifyContent="center"
@@ -24,24 +29,41 @@ function registerSucces() {
           colorScheme="teal"
           backgroundColor="#091B3D"
           variant="solid"
-          onClick={() => router.push("/group/testGroup")}
+          onClick={() => router.push("../group/myGroups")}
           type="button"
         >
           Групп руу очих
         </Button>
-        <Link
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          gap="1"
-          href="https://testnet.bscscan.com/"
-          isExternal
-        >
-          <Text> Гүйлгээг харах</Text>
-          <FiExternalLink />
-        </Link>
       </VStack>
-    </Box>
+      <Box maxWidth="200px">
+        {" "}
+        <Text>{hash}</Text>{" "}
+      </Box>
+
+      {isCopied ? (
+        <Button variant="unstyled" display="flex" alignItems="center">
+          <CorrectIcon />
+        </Button>
+      ) : (
+        <CopyToClipboard text={hash} onCopy={() => setCopied(true)}>
+          <Button variant="unstyled">
+            <CopyIcon />
+          </Button>
+        </CopyToClipboard>
+      )}
+
+      <Link
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        gap="1"
+        href="https://testnet.bscscan.com/"
+        isExternal
+      >
+        <Text> Гүйлгээг харах</Text>
+        <FiExternalLink />
+      </Link>
+    </Container>
   );
 }
 

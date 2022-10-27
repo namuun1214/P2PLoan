@@ -151,7 +151,7 @@ function SignUpForm() {
                   onComplete={(value) =>
                     confirmCode(value)
                       .then(() => {
-                        router.push("../connection/registerSucces");
+                        router.push("/group/transactionSuccess");
                       })
                       .catch((error) => {
                         alert("Code is wrong");

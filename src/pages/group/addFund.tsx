@@ -12,28 +12,28 @@ import {
   FormLabel,
   Switch,
   Button,
-} from '@chakra-ui/react'
-import { NextPage } from 'next'
-import { useRouter } from 'next/router'
-import React from 'react'
-import { useState } from 'react'
-import { KhanBankLogo } from '../../components/icons'
-import { MetaMaskLogo } from '../../components/icons/MetaMaskLogo'
-import { Header } from '../../components/layout/header'
+} from "@chakra-ui/react";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+import React from "react";
+import { useState } from "react";
+import { KhanBankLogo } from "../../components/icons";
+import { MetaMaskLogo } from "../../components/icons/MetaMaskLogo";
+import { Header } from "../../components/layout/header";
 const AddFund: NextPage = () => {
-  const [sliderValue, setSliderValue] = useState(50)
-  const [isCrypto, setCrypto] = useState(false)
-  const router = useRouter()
+  const [sliderValue, setSliderValue] = useState(50);
+  const [isCrypto, setCrypto] = useState(false);
+  const router = useRouter();
   const data = {
-    totalAmount: 1500000,
-    balance: 897500,
+    totalAmount: 0,
+    balance: 0,
     selfRate: 0,
-  }
+  };
   const labelStyles = {
-    mt: '2',
-    ml: '-2.5',
-    fontSize: 'sm',
-  }
+    mt: "2",
+    ml: "-2.5",
+    fontSize: "sm",
+  };
   return (
     <Box p={8}>
       <Header isBack title="Хөрөнгө оруулах" />
@@ -148,7 +148,7 @@ const AddFund: NextPage = () => {
           <HStack
             p={3}
             borderRadius="10px"
-            border={`1px solid ${isCrypto ? '#DAD7CD' : '#F5B544'}`}
+            border={`1px solid ${isCrypto ? "#DAD7CD" : "#F5B544"}`}
             flex={1}
             onClick={() => setCrypto(false)}
           >
@@ -158,7 +158,7 @@ const AddFund: NextPage = () => {
           <HStack
             p={3}
             borderRadius="10px"
-            border={`1px solid ${!isCrypto ? '#DAD7CD' : '#F5B544'}`}
+            border={`1px solid ${!isCrypto ? "#DAD7CD" : "#F5B544"}`}
             flex={1}
             onClick={() => setCrypto(true)}
           >
@@ -177,12 +177,12 @@ const AddFund: NextPage = () => {
           bgColor="#F5B544"
           width="full"
           mt={10}
-          onClick={() => router.push('addFundCrypto')}
+          onClick={() => router.push("addFundCrypto")}
         >
           ХӨРӨНГӨ ОРУУЛАХ
         </Button>
       </Box>
     </Box>
-  )
-}
-export default AddFund
+  );
+};
+export default AddFund;

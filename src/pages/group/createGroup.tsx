@@ -49,9 +49,13 @@ import {
   firestore,
   useDocument,
   useCollection,
+  useUser,
+  updateDocument,
 } from "../../config/common/firebase/firebase";
 import { from } from "rxjs";
 import { addDoc, Firestore } from "firebase/firestore";
+import { createReadStream } from "fs";
+import { createRouteLoader } from "next/dist/client/route-loader";
 
 function createGroupPage2() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -69,7 +73,6 @@ function createGroupPage2() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [activeMember3, setActiveMember3] = useState(false);
   const [name, setName] = useState("");
-
   const userName1 = "Ramazan Velichkov";
   const userName2 = "Raymundo Suzuki";
   const userName3 = "Elena Kayode";
@@ -82,7 +85,7 @@ function createGroupPage2() {
   const format = (val: string) => `%` + val;
   const parse = (val: string) => val.replace(/^\$/, "");
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [name, setName] = useState("");
+
   const { user } = useUser();
   const { data } = useDocument(`users/${user?.uid}`);
   const [signer, setSigner] = useState(undefined);
@@ -119,6 +122,7 @@ function createGroupPage2() {
     }
   }
   const formRef = useRef();
+  const [hash, setHash] = useState("");
 
   async function create() {
     if (typeof window.ethereum !== "undefined") {
@@ -129,9 +133,26 @@ function createGroupPage2() {
       );
       try {
         const creator = await contract.create(owners, num);
-        console.log(creator);
+        setHash(creator.hash);
         setIsWalletCreated(true);
-        router.push("/registerSucces");
+        router.push({
+          pathname: "/registerSucces",
+          query: {
+            hash: creator.hash,
+          },
+        });
+        updateDocument(`groups/${user?.uid}-${data?.groups?.length || 0}`, {
+          name: name,
+          members: [
+            "https://i.pravatar.cc/100?img=10",
+            "https://i.pravatar.cc/100?img=10",
+          ],
+          totalAmount: 0,
+          loanInterest: value,
+          contractHash: creator.hash,
+        });
+        groups && groups?.push(` ${user?.uid}-${data?.groups?.length || 0} `);
+        updateDocument(`users/${user?.uid}`, { groups: groups });
       } catch (error) {
         console.log(error);
       }
@@ -139,23 +160,11 @@ function createGroupPage2() {
       console.log("Please install MetaMask");
     }
   }
-  console.log(value);
-  console.log(name);
 
   let groups: [string] = (data && data.groups) || [];
 
   const createGroup = () => {
-    updateDocument(`groups/${user?.uid}-${data?.groups?.length || 0}`, {
-      name: name,
-      members: [
-        "https://i.pravatar.cc/100?img=10",
-        "https://i.pravatar.cc/100?img=10",
-      ],
-      totalAmount: 0,
-      loanInterest: value,
-    });
-    groups && groups?.push(` ${user?.uid}-${data?.groups?.length || 0} `);
-    updateDocument(`users/${user?.uid}`, { groups: groups });
+    create();
   };
   return (
     <Box p={8}>

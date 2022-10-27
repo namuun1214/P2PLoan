@@ -1,6 +1,6 @@
-import { Avatar } from '@chakra-ui/avatar'
-import { Button } from '@chakra-ui/button'
-import { HStack, VStack, Text } from '@chakra-ui/layout'
+import { Avatar } from "@chakra-ui/avatar";
+import { Button } from "@chakra-ui/button";
+import { HStack, VStack, Text } from "@chakra-ui/layout";
 
 export const GeneralTab = ({ members }) => {
   return (
@@ -38,7 +38,7 @@ export const GeneralTab = ({ members }) => {
           <Text textAlign="center" variant="caption">
             ОРУУЛСАН ХӨРӨНГӨ ОРУУЛАЛТ
           </Text>
-          <Text textAlign="center">150,000 ₮</Text>
+          <Text textAlign="center">0 ₮</Text>
         </VStack>
         <VStack
           py={3}
@@ -66,7 +66,7 @@ export const GeneralTab = ({ members }) => {
           <Text textAlign="center" variant="caption">
             ХӨРӨНГӨ ОРУУЛАЛТААС ХҮРТСЭН АШИГ
           </Text>
-          <Text textAlign="center">5,000 ₮</Text>
+          <Text textAlign="center">0 ₮</Text>
         </VStack>
         <VStack
           py={3}
@@ -83,5 +83,5 @@ export const GeneralTab = ({ members }) => {
         </VStack>
       </HStack>
     </VStack>
-  )
-}
+  );
+};
