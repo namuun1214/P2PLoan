@@ -1,5 +1,5 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
+import type { NextPage } from "next";
+import Head from "next/head";
 
 import {
   Avatar,
@@ -10,56 +10,59 @@ import {
   Text,
   Button,
   VStack,
-} from '@chakra-ui/react'
-import { useRouter } from 'next/router'
+} from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import {
   firestore,
   useDocument,
   useUser,
-} from '../../config/common/firebase/firebase'
-import { Header } from '../../components/layout/header'
-import { AddIcon } from '../../components/icons/AddIcon'
-import { docData } from 'rxfire/firestore'
-import { doc } from 'firebase/firestore'
-import { useState } from 'react'
+} from "../../config/common/firebase/firebase";
+import { Header } from "../../components/layout/header";
+import { AddIcon } from "../../components/icons/AddIcon";
+import { docData } from "rxfire/firestore";
+import { doc } from "firebase/firestore";
+import { useState } from "react";
 const MyGroups: NextPage = () => {
-  const { user } = useUser()
+  const { user } = useUser();
   // console.log(user)
-  const { data: userData } = useDocument(`users/${user?.uid}`)
-  const userGroups: string[] = userData?.groups || []
-  const [groupData, setgroupData] = useState({})
+  const { data: userData } = useDocument(`users/${user?.uid}`);
+  const userGroups: string[] = userData?.groups || [];
+  const [groupData, setgroupData] = useState({});
 
   const { data: groupData1 } = useDocument(
-    `groups/${userGroups ? userGroups?.[0] : `${user?.uid}-0`}`,
-  )
-  console.log(groupData1 && groupData)
+    `groups/${userGroups ? userGroups?.[0] : `${user?.uid}-0`}`
+  );
+  console.log(groupData1 && groupData);
   const groups = [
     {
-      name: 'Гэр бүл',
-      createdDate: '2022.09.10',
-      balance: '500000',
-      interestRate: '4',
+      name: "Гэр бүл",
+      createdDate: "2022.09.10",
+      balance: "500000",
+      interestRate: "4",
       members: [
-        { name: 'hh', img: 'https://i.pravatar.cc/100?img=3' },
-        { name: 'hh', img: 'https://i.pravatar.cc/100?img=3' },
-        { name: 'hh', img: 'https://i.pravatar.cc/100?img=3' },
-        { name: 'hh', img: 'https://i.pravatar.cc/100?img=3' },
+        { name: "hh", img: "https://i.pravatar.cc/100?img=3" },
+        { name: "hh", img: "https://i.pravatar.cc/100?img=3" },
+        { name: "hh", img: "https://i.pravatar.cc/100?img=3" },
+        { name: "hh", img: "https://i.pravatar.cc/100?img=3" },
       ],
     },
     {
-      name: 'Гэр бүл',
-      createdDate: '2022.09.10',
-      balance: '500000',
-      interestRate: '4',
+      name: "Гэр бүл",
+      createdDate: "2022.09.10",
+      balance: "500000",
+      interestRate: "4",
       members: [
-        { name: 'hh', img: 'https://i.pravatar.cc/100?img=3' },
-        { name: 'hh', img: 'https://i.pravatar.cc/100?img=3' },
-        { name: 'hh', img: 'https://i.pravatar.cc/100?img=3' },
-        { name: 'hh', img: 'https://i.pravatar.cc/100?img=3' },
+        { name: "hh", img: "https://i.pravatar.cc/100?img=3" },
+        { name: "hh", img: "https://i.pravatar.cc/100?img=3" },
+        { name: "hh", img: "https://i.pravatar.cc/100?img=3" },
+        { name: "hh", img: "https://i.pravatar.cc/100?img=3" },
       ],
     },
-  ]
-  const router = useRouter()
+  ];
+  // useEffect(()=>{
+
+  // },[])
+  const router = useRouter();
   return (
     <Box>
       <Head>
@@ -83,7 +86,7 @@ const MyGroups: NextPage = () => {
                 p={5}
                 onClick={() => {
                   router.push({
-                    pathname: 'groupDetail',
+                    pathname: "groupDetail",
                     query: {
                       name: el.name,
                       createdDate: el.createdDate,
@@ -91,7 +94,7 @@ const MyGroups: NextPage = () => {
                       interestRate: el.interestRate,
                       members: el.members.map((item) => item.img),
                     },
-                  })
+                  });
                 }}
                 key={index}
               >
@@ -122,12 +125,12 @@ const MyGroups: NextPage = () => {
                   </VStack>
                   <AvatarGroup size="md" max={2}>
                     {el.members?.map((user, index) => {
-                      return <Avatar name={user.name} src={user.img} />
+                      return <Avatar name={user.name} src={user.img} />;
                     })}
                   </AvatarGroup>
                 </HStack>
               </VStack>
-            )
+            );
           })}
           <Flex
             align="center"
@@ -135,7 +138,7 @@ const MyGroups: NextPage = () => {
             w="full"
             gap={3}
             onClick={() => {
-              router.push('/group/createGroup')
+              router.push("/group/createGroup");
             }}
           >
             <AddIcon />
@@ -144,7 +147,7 @@ const MyGroups: NextPage = () => {
         </VStack>
       </main>
     </Box>
-  )
-}
+  );
+};
 
-export default MyGroups
+export default MyGroups;

@@ -67,7 +67,7 @@ function NetworkPage() {
         colorScheme="teal"
         variant="solid"
         mr={3}
-        onClick={() => router.push("../group/createGroupPage")}
+        onClick={() => router.push("../group/createGroup")}
       >
         Дараах
       </Button>

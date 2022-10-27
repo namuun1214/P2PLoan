@@ -1,5 +1,5 @@
-import { useForm } from 'react-hook-form'
-import { getAuth } from 'firebase/auth'
+import { useForm } from "react-hook-form";
+import { getAuth } from "firebase/auth";
 import {
   FormLabel,
   FormControl,
@@ -11,19 +11,19 @@ import {
   PinInputField,
   Box,
   Input,
-} from '@chakra-ui/react'
-import router from 'next/router'
+} from "@chakra-ui/react";
+import router from "next/router";
 import {
   ConfirmationResult,
   RecaptchaVerifier,
   signInWithPhoneNumber,
   User,
   ApplicationVerifier,
-} from 'firebase/auth'
-import { useEffect, useState } from 'react'
+} from "firebase/auth";
+import { useEffect, useState } from "react";
 
-import React from 'react'
-import { useAuth } from '../../context/AuthContext'
+import React from "react";
+import { useAuth } from "../../context/AuthContext";
 import {
   auth,
   updateDocument,
@@ -31,85 +31,85 @@ import {
   useDocumentWithUser,
   useDocumentWithUserOnce,
   useUser,
-} from '../../config/common/firebase/firebase'
+} from "../../config/common/firebase/firebase";
 declare global {
   interface Window {
-    recaptchaVerifier: ApplicationVerifier
-    confirmationResult: ConfirmationResult
+    recaptchaVerifier: ApplicationVerifier;
+    confirmationResult: ConfirmationResult;
   }
 }
 function SignUpForm() {
   const {
     formState: { isSubmitting },
-  } = useForm()
-  const { setUser } = useAuth()
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [expandForm, setExpandForm] = useState(false)
-  const [counter, setCounter] = useState(60)
-  const { user } = useUser()
+  } = useForm();
+  const { setUser } = useAuth();
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [expandForm, setExpandForm] = useState(false);
+  const [counter, setCounter] = useState(60);
+  const { user } = useUser();
 
   useEffect(() => {
     if (auth || typeof window !== undefined) {
       window.recaptchaVerifier = new RecaptchaVerifier(
-        'recaptcha',
+        "recaptcha",
         {
-          size: 'visible',
+          size: "visible",
           callback: () => {
-            setExpandForm(true)
+            setExpandForm(true);
           },
         },
-        auth,
-      )
+        auth
+      );
     }
-  }, [])
-  const createUserOnFirebase = (user) => {
+  }, []);
+  const createUserOnFirebase = (user: { uid: any }) => {
     try {
-      updateDocument(`users/${user.uid}`, { phoneNumber: phoneNumber })
+      updateDocument(`users/${user.uid}`, { phoneNumber: phoneNumber });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
   const login = async (phoneNumber: string): Promise<ConfirmationResult> => {
     return new Promise((response, reject) => {
       signInWithPhoneNumber(
         auth,
         `+976${phoneNumber}`,
-        window.recaptchaVerifier,
+        window.recaptchaVerifier
       )
         .then((confirmationResult) => {
-          window.confirmationResult = confirmationResult
-          response(confirmationResult)
+          window.confirmationResult = confirmationResult;
+          response(confirmationResult);
         })
         .catch((error: Error) => {
-          reject(error)
-        })
-    })
-  }
+          reject(error);
+        });
+    });
+  };
   const resendCode = async (
-    phoneNumber: string,
+    phoneNumber: string
   ): Promise<ConfirmationResult> => {
-    return login(phoneNumber)
-  }
+    return login(phoneNumber);
+  };
   const confirmCode = (confirmationCode: string): Promise<User> => {
     return new Promise((response, reject) => {
       window.confirmationResult
         .confirm(confirmationCode)
 
         .then((result: any) => {
-          setUser(result.user as User)
-          createUserOnFirebase(result.user)
-          response(result.user)
+          setUser(result.user as User);
+          createUserOnFirebase(result.user);
+          response(result.user);
         })
 
         .catch((error: Error) => {
-          reject(error)
-        })
-    })
-  }
+          reject(error);
+        });
+    });
+  };
   useEffect(() => {
-    const timer = setInterval(() => setCounter(counter - 1), 1000)
-    return () => clearInterval(timer)
-  }, [counter])
+    const timer = setInterval(() => setCounter(counter - 1), 1000);
+    return () => clearInterval(timer);
+  }, [counter]);
 
   return (
     <Box
@@ -130,13 +130,13 @@ function SignUpForm() {
                   id="phoneNumber"
                   type="tel"
                   onChange={(value) => {
-                    setPhoneNumber(value.target.value)
+                    setPhoneNumber(value.target.value);
                   }}
                 />
               </FormControl>
               <Box id="recaptcha"></Box>
               <Button mt={4} variant="solid" onClick={() => login(phoneNumber)}>
-                Дараах{' '}
+                Дараах{" "}
               </Button>
             </>
           ) : (
@@ -151,10 +151,10 @@ function SignUpForm() {
                   onComplete={(value) =>
                     confirmCode(value)
                       .then(() => {
-                        router.push('/registerSucces')
+                        router.push("../connection/registerSucces");
                       })
                       .catch((error) => {
-                        alert('Code is wrong')
+                        alert("Code is wrong");
                       })
                   }
                 >
@@ -181,6 +181,6 @@ function SignUpForm() {
         </VStack>
       </form>
     </Box>
-  )
+  );
 }
-export default SignUpForm
+export default SignUpForm;

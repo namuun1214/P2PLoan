@@ -30,76 +30,140 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
-} from '@chakra-ui/react'
-import { AiFillCheckCircle } from 'react-icons/ai'
-import { AiOutlineClose } from 'react-icons/ai'
-import React, { useState } from 'react'
-import { FiArrowRight } from 'react-icons/fi'
-import { AiFillStar } from 'react-icons/ai'
-import { BsCheckCircle } from 'react-icons/bs'
-import router from 'next/router'
-import { Header } from '../../components/layout/header'
+  Icon,
+} from "@chakra-ui/react";
+import { AiFillCheckCircle } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
+import React, { useEffect, useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
+import { AiFillStar } from "react-icons/ai";
+import { BsCheckCircle } from "react-icons/bs";
+import router from "next/router";
+import { Header } from "../../components/layout/header";
+import { Contract, ethers } from "ethers";
+import { CREATOR_CONTRACT_ADDRESS, abi1, count } from "../../constants/index";
+import { MetaMaskInpageProvider } from "@metamask/providers";
+import { getJsonWalletAddress } from "ethers/lib/utils";
+import { useRef } from "react";
 import {
-  updateDocument,
-  useCollection,
+  firestore,
   useDocument,
-  useUser,
-} from '../../config/common/firebase/firebase'
+  useCollection,
+} from "../../config/common/firebase/firebase";
+import { from } from "rxjs";
+import { addDoc, Firestore } from "firebase/firestore";
 
 function createGroupPage2() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState("");
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [activePrivate, setActivePrivate] = useState(false)
+  const [activePrivate, setActivePrivate] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [activePublic, setActivePublic] = useState(false)
+  const [activePublic, setActivePublic] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [activeMember1, setActiveMember1] = useState(false)
+  const [activeMember1, setActiveMember1] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [activeMember2, setActiveMember2] = useState(false)
+  const [activeMember2, setActiveMember2] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [activeMember3, setActiveMember3] = useState(false)
+  const [activeMember3, setActiveMember3] = useState(false);
+  const [name, setName] = useState("");
 
-  const groupName = 'test'
-  const userName1 = 'Ramazan Velichkov'
-  const userName2 = 'Raymundo Suzuki'
-  const userName3 = 'Elena Kayode'
+  const userName1 = "Ramazan Velichkov";
+  const userName2 = "Raymundo Suzuki";
+  const userName3 = "Elena Kayode";
+  const groupName = "test";
+  const userAddress1 = "8.2";
+  const userAddress2 = "7.3";
+  const userAddress3 = "9.2";
+  const newHash = "";
 
-  const userAddress1 = '8.2'
-  const userAddress2 = '7.3'
-  const userAddress3 = '9.2'
-
-  const format = (val: string) => `%` + val
-  const parse = (val: string) => val.replace(/^\$/, '')
+  const format = (val: string) => `%` + val;
+  const parse = (val: string) => val.replace(/^\$/, "");
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [name, setName] = useState('')
-  const { user } = useUser()
-  const { data } = useDocument(`users/${user?.uid}`)
+  const [name, setName] = useState("");
+  const { user } = useUser();
+  const { data } = useDocument(`users/${user?.uid}`);
+  const [signer, setSigner] = useState(undefined);
+  const [isConnected, setIsConnected] = useState(false);
+  const [hasMetamask, setHasMetamask] = useState(false);
+  const [isWalletCreated, setIsWalletCreated] = useState(false);
 
-  let groups: [string] = (data && data.groups) || []
+  const num = 1;
+  const owners = [
+    "0x43626432525ccEcaF2eA9ba41192e998404A9807",
+    "0x2cE7cA7D8BF56A28f654E47F66CC8b2657Ad7fCc",
+  ];
+
+  useEffect(() => {
+    if (typeof window.ethereum !== "undefined") {
+      setHasMetamask(true);
+    }
+  }, []);
+
+  async function connect() {
+    if (typeof window.ethereum !== "undefined") {
+      try {
+        const ethereum = window.ethereum as unknown as MetaMaskInpageProvider;
+        await ethereum.request({ method: "eth_requestAccounts" });
+        setIsConnected(true);
+
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        setSigner(provider.getSigner());
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      setIsConnected(false);
+    }
+  }
+  const formRef = useRef();
+
+  async function create() {
+    if (typeof window.ethereum !== "undefined") {
+      const contract = new ethers.Contract(
+        CREATOR_CONTRACT_ADDRESS,
+        abi1,
+        signer
+      );
+      try {
+        const creator = await contract.create(owners, num);
+        console.log(creator);
+        setIsWalletCreated(true);
+        router.push("/registerSucces");
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      console.log("Please install MetaMask");
+    }
+  }
+  console.log(value);
+  console.log(name);
+
+  let groups: [string] = (data && data.groups) || [];
 
   const createGroup = () => {
     updateDocument(`groups/${user?.uid}-${data?.groups?.length || 0}`, {
       name: name,
       members: [
-        'https://i.pravatar.cc/100?img=10',
-        'https://i.pravatar.cc/100?img=10',
+        "https://i.pravatar.cc/100?img=10",
+        "https://i.pravatar.cc/100?img=10",
       ],
       totalAmount: 0,
       loanInterest: value,
-    })
-    groups && groups?.push(` ${user?.uid}-${data?.groups?.length || 0} `)
-    updateDocument(`users/${user?.uid}`, { groups: groups })
-  }
+    });
+    groups && groups?.push(` ${user?.uid}-${data?.groups?.length || 0} `);
+    updateDocument(`users/${user?.uid}`, { groups: groups });
+  };
   return (
     <Box p={8}>
       <Header isBack title="Групп үүсгэх" hasCloseButton />
       <VStack gap={10} w="full" pt={5}>
         <FormControl isRequired>
           <FormLabel fontSize="16px" color="#293056" htmlFor="дугаар">
-            {' '}
+            {" "}
             Нэрээ оруулна уу
           </FormLabel>
           <Input
@@ -109,7 +173,7 @@ function createGroupPage2() {
             type="text"
             borderColor="gray"
             onChange={(value) => {
-              setName(value.target.value)
+              setName(value.target.value);
             }}
           />
         </FormControl>
@@ -125,7 +189,7 @@ function createGroupPage2() {
         </Flex>
         <VStack gap="3" w="full">
           <HStack w="full" justifyContent="space-between">
-            {' '}
+            {" "}
             <Box
               display="flex"
               flexDirection="row"
@@ -167,7 +231,7 @@ function createGroupPage2() {
             )}
           </HStack>
           <HStack w="full" justifyContent="space-between">
-            {' '}
+            {" "}
             <Box
               display="flex"
               flexDirection="row"
@@ -209,7 +273,7 @@ function createGroupPage2() {
             )}
           </HStack>
           <HStack w="full" justifyContent="space-between">
-            {' '}
+            {" "}
             <Box
               display="flex"
               flexDirection="row"
@@ -260,7 +324,7 @@ function createGroupPage2() {
             max={100}
             borderColor="gray"
           >
-            {' '}
+            {" "}
             <NumberInputField />
           </NumberInput>
         </Box>
@@ -272,8 +336,8 @@ function createGroupPage2() {
               variant="outline"
               boxShadow="xl"
               onClick={() => {
-                setActivePublic(false)
-                setActivePrivate(true)
+                setActivePublic(false);
+                setActivePrivate(true);
               }}
             >
               PRIVATE
@@ -287,7 +351,7 @@ function createGroupPage2() {
               boxShadow="dark-lg"
               borderColor="green.500"
               onClick={() => {
-                setActivePrivate(false)
+                setActivePrivate(false);
               }}
             >
               PRIVATE
@@ -300,8 +364,8 @@ function createGroupPage2() {
               variant="outline"
               boxShadow="xl"
               onClick={() => {
-                setActivePublic(true)
-                setActivePrivate(false)
+                setActivePublic(true);
+                setActivePrivate(false);
               }}
             >
               PUBLIC
@@ -315,12 +379,12 @@ function createGroupPage2() {
               boxShadow="dark-lg"
               borderColor="green.500"
               onClick={() => {
-                setActivePublic(false)
+                setActivePublic(false);
               }}
             >
               PUBLIC
             </Button>
-          )}{' '}
+          )}{" "}
         </HStack>
         <Box
           display="flex"
@@ -335,50 +399,68 @@ function createGroupPage2() {
               Үйл ажиллагааны нөхцөл зөвшөөрч байна.
             </FormLabel>
           </FormControl>
+
+          {hasMetamask ? (
+            isConnected ? (
+              <Text>Хэтэвч холбогдсон</Text>
+            ) : (
+              <>
+                <Button colorScheme="teal" onClick={() => connect()}>
+                  Хэтэвчээ холбох
+                </Button>
+              </>
+            )
+          ) : (
+            "Please install metamask"
+          )}
           <Button
             variant="solid"
             colorScheme="teal"
             onClick={() => {
-              createGroup()
+              createGroup();
               router.push({
-                pathname: 'loadTransaction',
+                pathname: "loadTransaction",
                 query: {
-                  title: 'Үүсгэж байна',
-                  description: 'Таны группд дундын данс үүсгэж байна',
+                  title: "Үүсгэж байна",
+                  description: "Таны группд дундын данс үүсгэж байна",
                 },
-              })
+              });
             }}
           >
             Групп үүсгэх
           </Button>
         </Box>
-        <Modal onClose={onClose} isOpen={isOpen} isCentered>
-          <ModalOverlay />
-          <ModalContent alignItems="center">
-            <ModalHeader>Баяр хүргэе</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <VStack>
-                <AiFillCheckCircle color="#03B936" fontSize={100} />
-                <Text color="#03B936">Амжилттай</Text>
-                <Text>Таны групп амжилттай үүслээ</Text>
-              </VStack>
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                variant="link"
-                onClick={() => {
-                  router.push('/home')
-                }}
-              >
-                Нүүр хуудас
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+        {!isWalletCreated ? (
+          <Modal onClose={onClose} isOpen={isOpen} isCentered>
+            <ModalOverlay />
+            <ModalContent alignItems="center">
+              <ModalHeader>Баяр хүргэе</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <VStack>
+                  <AiFillCheckCircle color="#03B936" fontSize={100} />
+                  <Text color="#03B936">Амжилттай</Text>
+                  <Text>Таны групп амжилттай үүслээ</Text>
+                </VStack>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  variant="link"
+                  onClick={() => {
+                    router.push("/home");
+                  }}
+                >
+                  Нүүр хуудас
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        ) : (
+          <></>
+        )}
       </VStack>
     </Box>
-  )
+  );
 }
 
-export default createGroupPage2
+export default createGroupPage2;

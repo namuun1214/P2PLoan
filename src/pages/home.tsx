@@ -1,16 +1,17 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
+import type { NextPage } from "next";
+import Head from "next/head";
 
-import { Box, Button, VStack, Text } from '@chakra-ui/react'
-import SignUpPage from './login'
-import { useUser } from '../config/common/firebase/firebase'
-import { useAuth } from '../context/AuthContext'
-import { useRouter } from 'next/router'
+import { Box, Button } from "@chakra-ui/react";
+import SignUpPage from "./login";
+import { useUser } from "../config/common/firebase/firebase";
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/router";
+
 const HomePage: NextPage = () => {
-  const { user } = useUser()
+  const { user } = useUser();
   // console.log(user)
-  const { logout } = useAuth()
-  const router = useRouter()
+  const { logout } = useAuth();
+  const router = useRouter();
   return (
     <Box>
       <Head>
@@ -27,15 +28,15 @@ const HomePage: NextPage = () => {
           <Button
             variant="link"
             onClick={() => {
-              router.push('/group/myGroups')
+              router.push("/group/myGroups");
             }}
           >
             Миний группууд
           </Button>
           <Button
             onClick={() => {
-              void logout()
-              void router.push('/login')
+              void logout();
+              void router.push("/login");
             }}
           >
             Гарах
@@ -43,7 +44,7 @@ const HomePage: NextPage = () => {
         </VStack>
       </main>
     </Box>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;
