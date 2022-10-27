@@ -17,9 +17,11 @@ import { useAuth } from '../context/AuthContext'
 function SignUpPage() {
   const router = useRouter()
   const { hasUser } = useAuth()
-  useEffect(() => {
-    hasUser && router.push('/home')
-  }, [])
+  const { user } = useUser()
+  // useEffect(() => {
+  //   const UNDEFINED = undefined
+  //   ;(user === UNDEFINED || hasUser) && router.push('/home')
+  // }, [])
   return (
     <Box p={8}>
       <Header isBack title="Нэвтрэх" />

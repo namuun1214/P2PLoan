@@ -41,6 +41,7 @@ import router from 'next/router'
 import { Header } from '../../components/layout/header'
 import {
   updateDocument,
+  useCollection,
   useDocument,
   useUser,
 } from '../../config/common/firebase/firebase'
@@ -74,7 +75,24 @@ function createGroupPage2() {
   const parse = (val: string) => val.replace(/^\$/, '')
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [name, setName] = useState('')
+  const { user } = useUser()
+  const { data } = useDocument(`users/${user?.uid}`)
 
+  let groups: [string] = (data && data.groups) || []
+
+  const createGroup = () => {
+    updateDocument(`groups/${user?.uid}-${data?.groups?.length || 0}`, {
+      name: name,
+      members: [
+        'https://i.pravatar.cc/100?img=10',
+        'https://i.pravatar.cc/100?img=10',
+      ],
+      totalAmount: 0,
+      loanInterest: value,
+    })
+    groups && groups?.push(` ${user?.uid}-${data?.groups?.length || 0} `)
+    updateDocument(`users/${user?.uid}`, { groups: groups })
+  }
   return (
     <Box p={8}>
       <Header isBack title="Групп үүсгэх" hasCloseButton />
@@ -317,7 +335,20 @@ function createGroupPage2() {
               Үйл ажиллагааны нөхцөл зөвшөөрч байна.
             </FormLabel>
           </FormControl>
-          <Button variant="solid" colorScheme="teal" onClick={onOpen}>
+          <Button
+            variant="solid"
+            colorScheme="teal"
+            onClick={() => {
+              createGroup()
+              router.push({
+                pathname: 'loadTransaction',
+                query: {
+                  title: 'Үүсгэж байна',
+                  description: 'Таны группд дундын данс үүсгэж байна',
+                },
+              })
+            }}
+          >
             Групп үүсгэх
           </Button>
         </Box>

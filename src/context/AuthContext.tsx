@@ -51,7 +51,6 @@ export const AuthProvider: FC<{ children: ReactElement }> = (props) => {
     return () => unsubscribe()
   }, [auth])
   useEffect(() => {
-    console.log('hjhjh', user)
     if (user === undefined) {
       setHasUser(false)
     } else {

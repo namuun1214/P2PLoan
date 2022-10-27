@@ -12,13 +12,27 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import { useUser } from '../../config/common/firebase/firebase'
+import {
+  firestore,
+  useDocument,
+  useUser,
+} from '../../config/common/firebase/firebase'
 import { Header } from '../../components/layout/header'
 import { AddIcon } from '../../components/icons/AddIcon'
-
+import { docData } from 'rxfire/firestore'
+import { doc } from 'firebase/firestore'
+import { useState } from 'react'
 const MyGroups: NextPage = () => {
   const { user } = useUser()
   // console.log(user)
+  const { data: userData } = useDocument(`users/${user?.uid}`)
+  const userGroups: string[] = userData?.groups || []
+  const [groupData, setgroupData] = useState({})
+
+  const { data: groupData1 } = useDocument(
+    `groups/${userGroups ? userGroups?.[0] : `${user?.uid}-0`}`,
+  )
+  console.log(groupData1 && groupData)
   const groups = [
     {
       name: 'Гэр бүл',

@@ -93,7 +93,7 @@ export const useUser = (): UseUserType => {
   return { user, loading };
 };
 
-const USER_HOME = 'newUsers';
+const USER_HOME = 'users';
 export const useDocumentWithUser = (): UseDocumentWithUserType => {
   const [userData, setUserData] = useState<UserDataType>({});
   const [loading, setLoading] = useState(true);

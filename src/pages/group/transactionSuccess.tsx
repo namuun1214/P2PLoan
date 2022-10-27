@@ -16,7 +16,7 @@ function registerSucces() {
       <VStack spacing="13">
         <AiFillCheckCircle color="#03B936" fontSize={100} />
         <Text color="#03B936">Амжилттай</Text>
-        <Text>Таны гүйлгээ амжилттай хийгдлээ</Text>
+        <Text>Таны хүсэлт амжилттай биелэлээ</Text>
         <Button
           mt={4}
           rightIcon={<FiArrowRight fontSize={20} />}
