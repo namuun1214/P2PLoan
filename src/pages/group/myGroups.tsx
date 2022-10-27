@@ -14,6 +14,7 @@ import {
 import { useRouter } from 'next/router'
 import { useUser } from '../../config/common/firebase/firebase'
 import { Header } from '../../components/layout/header'
+import { AddIcon } from '../../components/icons/AddIcon'
 
 const MyGroups: NextPage = () => {
   const { user } = useUser()
@@ -66,6 +67,18 @@ const MyGroups: NextPage = () => {
                 borderRadius="15px"
                 w="full"
                 p={5}
+                onClick={() => {
+                  router.push({
+                    pathname: 'groupDetail',
+                    query: {
+                      name: el.name,
+                      createdDate: el.createdDate,
+                      balance: el.balance,
+                      interestRate: el.interestRate,
+                      members: el.members.map((item) => item.img),
+                    },
+                  })
+                }}
                 key={index}
               >
                 <HStack justify="space-between" w="full">
@@ -102,14 +115,18 @@ const MyGroups: NextPage = () => {
               </VStack>
             )
           })}
-          <Button
-            variant="link"
+          <Flex
+            align="center"
+            justify="end"
+            w="full"
+            gap={3}
             onClick={() => {
               router.push('/group/createGroup')
             }}
           >
-            Шинэ групп үүсгэх
-          </Button>
+            <AddIcon />
+            <Button variant="link">Шинэ групп үүсгэх</Button>
+          </Flex>
         </VStack>
       </main>
     </Box>
