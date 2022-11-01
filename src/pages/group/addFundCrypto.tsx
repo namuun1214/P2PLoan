@@ -27,7 +27,7 @@ const AddFundCrypto: NextPage = () => {
   const [address, setAddress] = useState("");
   const [isSend, setIsSend] = useState(false);
   const router = useRouter();
-  const num = 2;
+  const num = 25;
 
   const transactionParameters = {
     nonce: "0x00", // ignored by MetaMask
